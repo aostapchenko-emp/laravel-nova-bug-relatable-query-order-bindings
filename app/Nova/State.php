@@ -2,9 +2,12 @@
 
 namespace App\Nova;
 
+use App\Models\Country as CountryModel;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Validation\Rule;
 use Laravel\Nova\Fields;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Override;
 
 class State extends Resource
 {
@@ -31,6 +34,14 @@ class State extends Resource
         'id',
         'name',
     ];
+
+    #[Override]
+    public static function defaultOrderings($query): Builder
+    {
+        return $query->orderByRaw('country_id = ? desc', CountryModel::USA_ID)
+            ->orderBy('country_id')
+            ->orderBy('name');
+    }
 
     /**
      * Get the fields displayed by the resource.
